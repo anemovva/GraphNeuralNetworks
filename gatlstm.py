@@ -1,5 +1,5 @@
-import pytorch.nn as nn
-import pytorch as torch
+import torch.nn as nn
+import torch as torch
 from gat import GAT
 
 class GATLSTM(nn.Module):
