@@ -20,7 +20,7 @@ def main() -> None:
     # Create DataLoader
 
 
-    dataset = citation_full.CitationFull(root='./data/citeseer', name='CiteSeer')
+    dataset = citation_full.CitationFull(root='./data/CoraML', name='cora_ML')
 
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
 
@@ -28,7 +28,7 @@ def main() -> None:
 
     # Create model, try setting to cuda, cpu if not available
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model = GAT(dataset.num_features, 1).to(device)
+    model = GAT(dataset.num_features, dataset.num_classes).to(device)
 
     # Define loss function and optimizer
     criterion = nn.CrossEntropyLoss()
@@ -42,17 +42,26 @@ def main() -> None:
     best = 100000000000
 
 
+    # Look at data
+    for data in dataloader:
+        freq = {}
+        for i in data.y:
+            if i.item() in freq:
+                freq[i.item()] += 1
+            else:
+                freq[i.item()] = 1
+        print(freq)
+
     for epoch in range(1000):
         total_loss = 0
         print(f"Starting Epoch {epoch+1}")
         for data in dataloader:
             data = data.to(device)
             # Convert targets to float
-            data.y = data.y.float()
             optimizer.zero_grad()
             output = model.forward(data)
-            output = output.view(-1)
-            print("Computing loss")
+            print(f"Output = {output}")
+            print(f"Target = {data.y}")
             loss = criterion(output, data.y)
             loss.backward()
             optimizer.step()
