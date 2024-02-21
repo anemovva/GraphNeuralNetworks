@@ -88,6 +88,7 @@ class GATLayer(nn.Module):
             
             for head in self.heads:
                 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+                device = torch.device('cpu')
                 out = torch.zeros((h.size()[0], self.out_dim)).to(device)
                 
                 for i in range(h.size(0)):

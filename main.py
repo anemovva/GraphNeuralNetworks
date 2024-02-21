@@ -27,7 +27,8 @@ def main() -> None:
 
 
     # Create model, try setting to cuda, cpu if not available
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cpu')
+    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = GAT(dataset.num_features, dataset.num_classes).to(device)
 
     # Define loss function and optimizer
@@ -55,7 +56,7 @@ def main() -> None:
     for epoch in range(1000):
         total_loss = 0
         for data in dataloader:
-            data = data.to(device)
+            # data = data.to(device)
             # Convert targets to float
             optimizer.zero_grad()
             output = model.forward(data)
