@@ -57,6 +57,7 @@ def main() -> None:
             loss.backward()
             optimizer.step()
             total_loss += loss.item()
+            print(f"Loss = {loss.item()}")
         if total_loss < best:
             best = total_loss
         if initial == 0:
