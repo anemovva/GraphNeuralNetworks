@@ -20,7 +20,7 @@ def main() -> None:
     # Create DataLoader
 
 
-    dataset = citation_full.CitationFull(root='./data/cora', name='cora')
+    dataset = citation_full.CitationFull(root='./data/citeseer', name='CiteSeer')
 
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
 
@@ -44,6 +44,7 @@ def main() -> None:
 
     for epoch in range(1000):
         total_loss = 0
+        print(f"Starting Epoch {epoch+1}")
         for data in dataloader:
             data = data.to(device)
             # Convert targets to float
@@ -51,6 +52,7 @@ def main() -> None:
             optimizer.zero_grad()
             output = model.forward(data)
             output = output.view(-1)
+            print("Computing loss")
             loss = criterion(output, data.y)
             loss.backward()
             optimizer.step()

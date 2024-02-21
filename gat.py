@@ -22,7 +22,7 @@ class GATHead(nn.Module):
         # h is the input node features
         # i,j is the pair that we need to calc attention for
         # return the output node features
-        
+        # print("Edge: {}, {}".format(i, j))
         sumneighbors = 0;
         for pair in g:
             if pair[0]==i:
