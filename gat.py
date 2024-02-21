@@ -60,7 +60,8 @@ class GATLayer(nn.Module):
 
 
         if self.final:
-            out = torch.zeros((h.size()[0], self.out_dim))
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            out = torch.zeros((h.size()[0], self.out_dim)).to(device)
             for i in range(h.size(0)):
                 for head in self.heads:
                     for index in range(g.shape[1]):
@@ -83,7 +84,9 @@ class GATLayer(nn.Module):
             outcollection = []
             
             for head in self.heads:
-                out = torch.zeros((h.size()[0], self.out_dim))
+                device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+                out = torch.zeros((h.size()[0], self.out_dim)).to(device)
+                
                 for i in range(h.size(0)):
                     for pair in g:
                         j = pair[0]
