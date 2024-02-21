@@ -75,7 +75,6 @@ class GATLayer(nn.Module):
                         if j == i or k == i:
                             outreal.append(head.forward(g, h, j, k)*self.fc(h[k]))
                             # print(head.forward(g, h, j, k))
-            print("Outreal: {}".format(len(outreal)))            
             out = torch.stack(outreal)
             
             # print("Out: {}".format(out))

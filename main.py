@@ -54,19 +54,16 @@ def main() -> None:
 
     for epoch in range(1000):
         total_loss = 0
-        print(f"Starting Epoch {epoch+1}")
         for data in dataloader:
             data = data.to(device)
             # Convert targets to float
             optimizer.zero_grad()
             output = model.forward(data)
-            print(f"Output = {output}")
-            print(f"Target = {data.y}")
+
             loss = criterion(output, data.y)
             loss.backward()
             optimizer.step()
             total_loss += loss.item()
-            print(f"Loss = {loss.item()}")
         if total_loss < best:
             best = total_loss
         if initial == 0:
