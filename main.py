@@ -1,5 +1,5 @@
 # from torch_geometric.data import Data
-from torch_geometric.data import DataLoader
+from torch_geometric.loader import DataLoader
 # from torch_geometric.datasets import Planetoid
 import torch_geometric.datasets.citation_full as citation_full
 import torch
@@ -33,7 +33,7 @@ def main() -> None:
 
     # Define loss function and optimizer
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.005, weight_decay=0.0005)
 
     print("Training")
 
@@ -70,6 +70,10 @@ def main() -> None:
         if initial == 0:
             initial = total_loss
         print(f"Epoch {epoch+1}: Loss = {total_loss} (Initial = {initial}, Best = {best})")
+    
+
+    # Open saves directory and save GAT model
+    torch.save(model.state_dict(), "saves/gat.pth")
     return
 
 main()

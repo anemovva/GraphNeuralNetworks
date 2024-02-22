@@ -6,6 +6,8 @@ class GATHead(nn.Module):
         super(GATHead, self).__init__()
         self.attnn = nn.Linear(2 * in_dim, 1)
         self.leakyrelu = nn.LeakyReLU(0.2)
+        
+        torch.nn.init.xavier_uniform_(self.attnn.weight)
     
     def processnodes(self, i, j, h):
         # i and j are the indices of the nodes connected by the edge
@@ -52,6 +54,9 @@ class GATLayer(nn.Module):
             self.fc = nn.Linear(in_dim, out_dim)
         else:
             self.fc = nn.Linear(in_dim, out_dim)
+            self.nonlinear = nn.ELU()
+        torch.nn.init.xavier_uniform_(self.fc.weight)
+        
     
     def forward(self, data):
         # g is the graph in Adjacency list format (list of pairs of nodes)
