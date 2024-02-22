@@ -53,7 +53,7 @@ def main() -> None:
                 freq[i.item()] = 1
         print(freq)
 
-    for epoch in range(1000):
+    for epoch in range(100):
         total_loss = 0
         for data in dataloader:
             # data = data.to(device)
