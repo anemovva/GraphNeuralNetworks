@@ -8,6 +8,8 @@ class GATHead(nn.Module):
         self.leakyrelu = nn.LeakyReLU(0.2)
         
         torch.nn.init.xavier_uniform_(self.attnn.weight)
+        self.dropout = nn.Dropout(p=0.6)
+
     
     def processnodes(self, i, j, h):
         # i and j are the indices of the nodes connected by the edge
@@ -33,7 +35,9 @@ class GATHead(nn.Module):
         # print("Sumneighbors: {}".format(sumneighbors))
         # print("Processnodes: {}".format(self.processnodes(i, j, h)))
         
-        return self.processnodes(i, j, h) / sumneighbors
+        out = self.processnodes(i, j, h) / sumneighbors
+        out = self.dropout(out)
+        return out
         
         
         
@@ -45,6 +49,8 @@ class GATLayer(nn.Module):
         self.heads = nn.ModuleList()
         self.out_dim = out_dim
         self.final = final
+        self.dropout = nn.Dropout(p=0.6)
+
         # Change based on whatever is needed
         self.nonlinear = nn.Softmax(dim=1)
         
@@ -114,10 +120,13 @@ class GAT(nn.Module):
         super(GAT, self).__init__()
         self.initiallayer = GATLayer(in_dim, out_dim=8, num_heads=8, final=False)
         self.predictionlayer = GATLayer(in_dim=8*8, out_dim=out_dim, num_heads=1, final=True)
+        self.dropout = nn.Dropout(p=0.6)
     
     def forward(self, data):
         # print("Data.x: {}".format(data.x))
+        data.x = self.dropout(data.x)
         hprime = self.initiallayer.forward(data)
+        hprime = self.dropout(hprime)
         dataprimed = data
         dataprimed.x = hprime
         out = self.predictionlayer.forward(dataprimed)

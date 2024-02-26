@@ -4,7 +4,6 @@ from torch_geometric.loader import DataLoader
 import torch_geometric.datasets.citation_full as citation_full
 import torch
 # import dgl
-
 import torch.nn as nn
 from gat import GAT
 
@@ -34,6 +33,13 @@ def main() -> None:
     # Define loss function and optimizer
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.005, weight_decay=0.0005)
+
+    # Check if there is a save in the saves/ directory, if so load it
+    try:
+        model.load_state_dict(torch.load("saves/gat.pth"))
+        print("Loaded model from saves/gat.pth")
+    except FileNotFoundError:
+        print("No save found, training from scratch")
 
     print("Training")
 
@@ -70,10 +76,21 @@ def main() -> None:
         if initial == 0:
             initial = total_loss
         print(f"Epoch {epoch+1}: Loss = {total_loss} (Initial = {initial}, Best = {best})")
-    
+
 
     # Open saves directory and save GAT model
     torch.save(model.state_dict(), "saves/gat.pth")
+
+
+    model.eval()
+    for data in dataloader:
+        output = model.forward(data)
+        output = torch.argmax(output, 1)
+        correct = 0
+        for i in range(len(output)):
+            if output[i] == data.y[i]:
+                correct += 1
+        print(f"Accuracy: {100*correct/len(output)}%")
     return
 
 main()
